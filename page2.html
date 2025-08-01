@@ -14,24 +14,26 @@
       align-items: center;
       min-height: 100vh;
     }
-    .card {
-      background: #23262a;
-      padding: 40px 34px 34px 34px;
-      border-radius: 22px;
-      width: 440px;
-      box-shadow: 0 4px 24px #0008;
-      text-align: left;
-      max-width: 97vw;
-    }
-    .card-title {
-      font-size: 1.45em;
-      color: #ffc107;
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 18px;
-      letter-spacing: 0.03em;
-      text-decoration: underline;
-    }
+ .card {
+    background: #23262a;
+    padding: 40px 34px 34px 34px;
+    border-radius: 22px;
+    width: 440px;
+    box-shadow: 0 4px 24px #0008;
+    text-align: left;
+    max-width: 97vw;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+.card-title {
+    font-size: 1.45em;
+    color: #ffc107;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 45px;
+    letter-spacing: 0.03em;
+    text-decoration: underline;
+}
     .setup-section {
       margin-bottom: 24px;
       padding-bottom: 14px;
@@ -41,26 +43,61 @@
       border-bottom: none;
       margin-bottom: 0;
     }
-    .section-label {
-      font-weight:600;
-      font-size:1.06em;
-      color:#ffc107;
-      margin-bottom: 7px;
-      display: block;
-    }
-    .radio-row {
+.section-label {
+    font-weight: 600;
+    font-size: 1.06em;
+    color: #dedcd7;
+    margin-bottom: 7px;
+    display: block;
+}
+
+    /* --- Radio pills main style --- */
+    .radio-pills {
       display: flex;
-      gap: 16px;
-      align-items: center;
-      margin-bottom: 10px;
+      gap: 12px;
       margin-top: 5px;
+      margin-bottom: 10px;
     }
-    .radio-row label {
-      font-size: 1em;
-      font-weight: 500;
-      color: #eaeaea;
+    .radio-pills input[type="radio"] {
+      /* Hide native radio but keep accessible */
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+    .radio-pills label {
+      min-width: 96px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.035);
+      color: #b6c7ca;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 10px 0;
       cursor: pointer;
+      transition: background .18s, color .18s, box-shadow .18s, border .16s;
+      border: 2px solid transparent;
+      box-shadow: 0 1px 2px #0002;
+      font-size: 1em;
+      user-select: none;
+      flex: 1 1 0;
+      position: relative;
     }
+    .radio-pills label:hover {
+      background: rgba(255,255,255,0.09);
+      color: #fff;
+    }
+
+.radio-pills input[type="radio"]:checked + label {
+    background: #ffc1070f;
+    color: #ffc107;
+    border-color: #ffc10777;
+    box-shadow: 0 2px 8px #0003;
+    z-index: 1;
+}
+
+    /* --- End radio pills --- */
+
     .input-row {
       display: flex;
       align-items: center;
@@ -173,48 +210,52 @@
     .success { color: #ffc107; margin-top: 8px; text-align: center; font-weight: 600;}
     .hidden { display: none; }
 
-    #copyCodeBtn {
-      font-size: 0.83em;
-    }
-    #autoGenBtn,
-    #saveQRBtn {
-      font-size: 0.86em;
-    }
+    #copyCodeBtn { font-size: 0.83em; }
+    #autoGenBtn, #saveQRBtn { font-size: 0.86em; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/qr-code-styling/lib/qr-code-styling.js"></script>
 </head>
 <body>
   <div class="card">
-    <div class="card-title">Thermostat Security & Access Setup</div>
+    <div class="card-title">Thermostat Security & </br>Access Setup</div>
     <form id="thermoSetupForm" autocomplete="off" onsubmit="event.preventDefault(); saveSetup();">
       <!-- Temperature Scale -->
       <div class="setup-section">
-        <span class="section-label">Preferred Temperature Units </span>
-        <div class="radio-row">
-          <label><input type="radio" name="scale" value="Fahrenheit" checked> Fahrenheit (°F)</label>
-          <label><input type="radio" name="scale" value="Celsius"> Celsius (°C)</label>
+        <span class="section-label">Preferred Temperature Units</span>
+        <div class="radio-pills">
+          <input type="radio" name="scale" id="scale-f" value="Fahrenheit" checked>
+          <label for="scale-f">Fahrenheit (°F)</label>
+          <input type="radio" name="scale" id="scale-c" value="Celsius">
+          <label for="scale-c">Celsius (°C)</label>
         </div>
       </div>
       <!-- Time and Date -->
       <div class="setup-section">
         <span class="section-label">Set Time and Date</span>
-        <div class="input-row"></div>
+        <div class="input-row">
+          <!-- Add your date/time inputs here if needed -->
+        </div>
       </div>
       <!-- Web UI Password -->
       <div class="setup-section">
         <span class="section-label">Require password for thermostat web access?</span>
-        <div class="radio-row">
-          <label><input type="radio" name="webPw" value="yes"> Yes</label>
-          <label><input type="radio" name="webPw" value="no" checked> No</label>
+        <div class="radio-pills">
+          <input type="radio" name="webPw" id="webPw-yes" value="yes">
+          <label for="webPw-yes">Yes</label>
+          <input type="radio" name="webPw" id="webPw-no" value="no" checked>
+          <label for="webPw-no">No</label>
         </div>
       </div>
       <!-- Temp/Mode Protection -->
       <div class="setup-section">
         <span class="section-label">Require protection for Thermostat setting changes?</span>
-        <div class="radio-row">
-          <label><input type="radio" name="changeProt" value="password"> Password</label>
-          <label><input type="radio" name="changeProt" value="pin"> Pin</label>
-          <label><input type="radio" name="changeProt" value="none" checked> None</label>
+        <div class="radio-pills">
+          <input type="radio" name="changeProt" id="changeProt-password" value="password">
+          <label for="changeProt-password">Password</label>
+          <input type="radio" name="changeProt" id="changeProt-pin" value="pin">
+          <label for="changeProt-pin">Pin</label>
+          <input type="radio" name="changeProt" id="changeProt-none" value="none" checked>
+          <label for="changeProt-none">None</label>
         </div>
       </div>
       <!-- Credentials Section -->
@@ -229,7 +270,6 @@
           <input type="number" id="setupPin" placeholder="Security Pin" min="1000" max="999999" disabled>
         </div>
         <div class="recovery-grid">
-          <!-- Column 1 -->
           <div class="recovery-col1">
             <div class="sub-label">Recovery Key for Pin & Password</div>
             <div class="recovery-row">
@@ -240,17 +280,15 @@
               <button type="button" class="btn" id="copyCodeBtn" onclick="copySecKey()" disabled>Copy key</button>
               <button type="button" class="btn" id="saveQRBtn" onclick="saveQRImg()" disabled>Save QR</button>
             </div>
-            <!-- Warning only shows after Generate is pressed -->
           </div>
-          <!-- Column 2 (QR) -->
           <div>
             <div id="secKeyQR"></div>
           </div>
         </div>
-                     <div id="recoveryWarning" class="sub-label hidden" style="color:#79ff9d91; font-size:0.93em; padding-top:5px;">
-  Please store this key safely or within thermostat.
-  If lost, Password &amp; Pin recovery is impossible.
-</div>
+        <div id="recoveryWarning" class="sub-label hidden" style="color:#79ff9d91; font-size:0.93em; padding-top:5px;">
+          Please store this key safely or within thermostat case.<br>
+          If lost, Password &amp; Pin recovery is impossible, will require factory reset.
+        </div>
       </div>
       <!-- Save / Reset -->
       <div class="savebar">
