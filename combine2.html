@@ -1,0 +1,685 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Atomic Thermostat Setup</title>
+  <style>
+    body {
+      background: #181b1e;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #fff;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: #23262a;
+      padding: 40px;
+      border-radius: 22px;
+      width: 420px;
+      box-shadow: 0 4px 24px #0008;
+      text-align: center;
+      overflow: hidden;
+      transition: max-height 1.4s ease;
+      max-height: 200px;
+      min-height: 211px;
+    }
+
+    .card.expanded {
+      max-height: 1000px;
+    }
+
+    .typewriter-wrapper {
+      display: inline-block;
+      border-right: 2px solid #ffc107;
+      white-space: nowrap;
+      overflow: hidden;
+      font-size: 1.6em;
+      color: #ffc107;
+      font-weight: 600;
+      width: 0;
+      margin-bottom: 10px;
+      animation: typing 4.5s steps(40, end) forwards, blink 0.5s step-end 9;
+    }
+
+    #subtitle {
+      margin-top: 0;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      0%, 50% { border-color: #ffc107; }
+      100% { border-color: transparent; }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeIn 1.4s ease forwards;
+    }
+
+    .fade-in.delay-1 {
+      animation-delay: 4.6s;
+    }
+
+    .fade-in.delay-2 {
+      animation-delay: 2.4s;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .options-row {
+      display: none;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 28px;
+      opacity: 0;
+    }
+
+    .options-row.show {
+      display: flex;
+      animation: fadeIn 1.2s ease forwards;
+      animation-delay: 0.1s;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgb(255 255 255 / 20%);
+    }
+
+    .option-box {
+      flex: 1;
+      background: #1c1e23;
+      padding: 16px;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .option-box:hover,
+    .option-box.active {
+      border-color: #ffc107;
+      background: #2a2e34;
+    }
+
+    .option-box span {
+      display: block;
+      margin-top: 8px;
+      font-size: 0.95em;
+      font-weight: 600;
+      color: #ffc107;
+    }
+
+    .form-section {
+      display: none;
+      animation: fadeIn 0.6s ease-in-out;
+      margin-top: 16px;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .form-section.active {
+      display: block;
+      opacity: 1;
+    }
+
+.form-section label {
+    display: block;
+    margin: 10px 0 5px;
+    font-size: 0.9em;
+    text-align: left;
+    padding-top: 10px;
+}
+
+    .form-section input {
+      width: 95%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #1c1e23;
+      color: #eaeaea;
+      margin-bottom: 12px;
+      font-size: 0.95em;
+    }
+
+.buttons {
+    display: none;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    padding-top: 20px;
+    border-top: 1px solid rgb(255 255 255 / 20%);
+}
+
+    .buttons.show {
+      display: flex;
+      opacity: 1;
+    }
+ 
+    .buttons button {
+      padding: 8px 18px;
+      font-size: 0.95em;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      width: 300px;
+    }
+
+    .buttons .cancel {
+      background: transparent;
+      color: #eaeaea;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .buttons .cancel:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .buttons .submit {
+      background: #ffc107;
+      color: #181b1e;
+    }
+
+    .buttons .submit:hover {
+      background: #ffca28;
+    }
+  </style>
+  <style>
+    body {
+      background: #181b1e;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #fff;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+ .card {
+    background: #23262a;
+    padding: 40px 34px 34px 34px;
+    border-radius: 22px;
+    width: 440px;
+    box-shadow: 0 4px 24px #0008;
+    text-align: left;
+    max-width: 97vw;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+.card-title {
+    font-size: 1.45em;
+    color: #ffc107;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 45px;
+    letter-spacing: 0.03em;
+    text-decoration: underline;
+}
+    .setup-section {
+      margin-bottom: 24px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgb(255 255 255 / 13%);
+    }
+    .setup-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+.section-label {
+    font-weight: 600;
+    font-size: 1.06em;
+    color: #dedcd7;
+    margin-bottom: 7px;
+    display: block;
+}
+
+    /* --- Radio pills main style --- */
+    .radio-pills {
+      display: flex;
+      gap: 12px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+    }
+    .radio-pills input[type="radio"] {
+      /* Hide native radio but keep accessible */
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+    .radio-pills label {
+      min-width: 96px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.035);
+      color: #b6c7ca;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 10px 0;
+      cursor: pointer;
+      transition: background .18s, color .18s, box-shadow .18s, border .16s;
+      border: 2px solid transparent;
+      box-shadow: 0 1px 2px #0002;
+      font-size: 1em;
+      user-select: none;
+      flex: 1 1 0;
+      position: relative;
+    }
+    .radio-pills label:hover {
+      background: rgba(255,255,255,0.09);
+      color: #fff;
+    }
+
+.radio-pills input[type="radio"]:checked + label {
+    background: #ffc1070f;
+    color: #ffc107;
+    border-color: #ffc10777;
+    box-shadow: 0 2px 8px #0003;
+    z-index: 1;
+}
+
+    /* --- End radio pills --- */
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 6px 0;
+    }
+    input[type="password"], input[type="text"], input[type="number"] {
+      width: 92%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.19);
+      background: #1c1e23;
+      color: #eaeaea;
+      margin-bottom: 2px;
+      font-size: 1em;
+      outline: none;
+      transition: border .15s, background .18s, color .16s;
+    }
+    input:disabled {
+      background: #222225 !important;
+      color: #858585 !important;
+      border: 1px solid #333 !important;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .mini-btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 7px;
+      justify-content: flex-start;
+    }
+    .btn {
+      background: #23262a;
+      color: #ffc107;
+      font-weight: 600;
+      font-size: 1em;
+      border: 1.5px solid #ffc107aa;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .18s, color .15s, border-color .16s, opacity .15s;
+      box-shadow: 0 2px 8px #0006;
+      padding: 7px 14px;
+      min-width: 90px;
+      opacity: 1;
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      color: #858585;
+      border-color: #333 !important;
+      background: #23262a !important;
+      cursor: not-allowed;
+    }
+    .btn:hover:not(:disabled) {
+      background: #ffc107;
+      color: #23262a;
+      border-color: #23262a;
+    }
+    .recovery-grid {
+      display: grid;
+      grid-template-columns: 1fr 132px;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 8px;
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px solid rgb(255 255 255 / 13%);
+    }
+    .recovery-col1 {
+      display: flex;
+      flex-direction: column;
+      gap: 0px;
+      min-width: 0;
+    }
+    .recovery-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 0.5em;
+      margin-top: 0;
+      align-items: center;
+    }
+    #secKeyQR {
+      width: 120px;
+      height: 120px;
+      background: #23262a;
+      padding: 4px;
+      border-radius: 8px;
+      min-width: 120px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .savebar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .btn.save { background: #ffc107; color: #181b1e; border-color: #ffc107; min-width: 120px;}
+    .btn.save:hover:not(:disabled) { background: #ffca28; }
+    .btn.reset { background: transparent; color: #eaeaea; border: 1px solid rgba(255, 255, 255, 0.18);}
+    .btn.reset:hover:not(:disabled) { background: rgba(255,255,255,0.08); color: #fff; }
+    .sub-label {
+      font-size: 1.05em;
+      color: #ffc107bb;
+      margin: 6px 0 3px 0;
+      font-weight: 500;
+      padding-bottom: 10px;
+      padding-left: 5px;
+    }
+    .success { color: #ffc107; margin-top: 8px; text-align: center; font-weight: 600;}
+    .hidden { display: none; }
+
+    #copyCodeBtn { font-size: 0.83em; }
+    #autoGenBtn, #saveQRBtn { font-size: 0.86em; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling/lib/qr-code-styling.js"></script>
+</head>
+<body>
+
+  <div id="page1">
+  <div class="card" id="card">
+    <h1 class="typewriter-wrapper">Welcome to Atomic Thermostat</h1>
+    <p id="subtitle" class="fade-in delay-1">Please choose how you would like to connect:</p>
+
+    <div id="options" class="options-row fade-in delay-2">
+      <div class="option-box" id="btnAp">
+        <div>📡</div>
+        <span>Access Point</span>
+      </div>
+      <div class="option-box" id="btnWifi">
+        <div>🌐</div>
+        <span>Connect to WiFi</span>
+      </div>
+    </div>
+
+    <div id="apForm" class="form-section">
+      <label>Choose Access Point Name:</label>
+      <input type="text" placeholder="Access Point Name">
+      <label>Choose Access Point Password:</label>
+      <input type="password" placeholder="Access Point Password">
+    </div>
+
+    <div id="wifiForm" class="form-section">
+      <label>WiFi Network Name:</label>
+      <input type="text" placeholder="WiFi SSID (Name) ">
+      <label>WiFi Password:</label>
+      <input type="password" placeholder="WiFi Password">
+    </div>
+
+    <div id="actionButtons" class="buttons">
+      <button class="cancel" onclick="location.reload()">Reset</button>
+      <button id="saveBtn" class="submit">Save</button>
+    </div>
+  </div>
+
+  <script>
+    const btnAp = document.getElementById('btnAp');
+    const btnWifi = document.getElementById('btnWifi');
+    const apForm = document.getElementById('apForm');
+    const wifiForm = document.getElementById('wifiForm');
+    const buttons = document.getElementById('actionButtons');
+    const options = document.getElementById('options');
+    const card = document.getElementById('card');
+
+    // Animate full card expansion
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        options.classList.add('show');
+        card.classList.add('expanded');
+      }, 5000); // after typing done
+    });
+
+    // Clean up cursor after typing
+    setTimeout(() => {
+      document.querySelector('.typewriter-wrapper').style.borderRight = 'none';
+    }, 4700);
+
+    btnAp.addEventListener('click', () => {
+      apForm.classList.add('active');
+      wifiForm.classList.remove('active');
+      btnAp.classList.add('active');
+      btnWifi.classList.remove('active');
+      buttons.classList.add('show');
+    });
+
+    btnWifi.addEventListener('click', () => {
+      wifiForm.classList.add('active');
+      apForm.classList.remove('active');
+      btnWifi.classList.add('active');
+      btnAp.classList.remove('active');
+      buttons.classList.add('show');
+    });
+  </script>
+</div>
+<div id="page2" style="display:none">
+  <div class="card">
+    <div class="card-title">Thermostat Security & </br>Access Setup</div>
+    <form id="thermoSetupForm" autocomplete="off" onsubmit="event.preventDefault(); saveSetup();">
+      <!-- Temperature Scale -->
+      <div class="setup-section">
+        <span class="section-label">Preferred Temperature Units</span>
+        <div class="radio-pills">
+          <input type="radio" name="scale" id="scale-f" value="Fahrenheit" checked>
+          <label for="scale-f">Fahrenheit (°F)</label>
+          <input type="radio" name="scale" id="scale-c" value="Celsius">
+          <label for="scale-c">Celsius (°C)</label>
+        </div>
+      </div>
+      <!-- Time and Date -->
+      <div class="setup-section">
+        <span class="section-label">Set Time and Date</span>
+        <div class="input-row">
+          <!-- Add your date/time inputs here if needed -->
+        </div>
+      </div>
+      <!-- Web UI Password -->
+      <div class="setup-section">
+        <span class="section-label">Require password for thermostat web access?</span>
+        <div class="radio-pills">
+          <input type="radio" name="webPw" id="webPw-yes" value="yes">
+          <label for="webPw-yes">Yes</label>
+          <input type="radio" name="webPw" id="webPw-no" value="no" checked>
+          <label for="webPw-no">No</label>
+        </div>
+      </div>
+      <!-- Temp/Mode Protection -->
+      <div class="setup-section">
+        <span class="section-label">Require protection for Thermostat setting changes?</span>
+        <div class="radio-pills">
+          <input type="radio" name="changeProt" id="changeProt-password" value="password">
+          <label for="changeProt-password">Password</label>
+          <input type="radio" name="changeProt" id="changeProt-pin" value="pin">
+          <label for="changeProt-pin">Pin</label>
+          <input type="radio" name="changeProt" id="changeProt-none" value="none" checked>
+          <label for="changeProt-none">None</label>
+        </div>
+      </div>
+      <!-- Credentials Section -->
+      <div class="setup-section">
+        <div class="input-row">
+          <input type="password" id="setupPassword" placeholder="Setup Password" disabled>
+        </div>
+        <div class="input-row">
+          <input type="password" id="setupPassword2" placeholder="Confirm password" disabled>
+        </div>
+        <div class="input-row">
+          <input type="number" id="setupPin" placeholder="Security Pin" min="1000" max="999999" disabled>
+        </div>
+        <div class="recovery-grid">
+          <div class="recovery-col1">
+            <div class="sub-label">Recovery Key for Pin & Password</div>
+            <div class="recovery-row">
+              <input type="text" id="secKey" placeholder="Recovery key" readonly disabled style="flex:1; min-width:120px;">
+            </div>
+            <div class="mini-btn-row">
+              <button type="button" class="btn" id="autoGenBtn" onclick="generateSecKey()" disabled>Generate</button>
+              <button type="button" class="btn" id="copyCodeBtn" onclick="copySecKey()" disabled>Copy key</button>
+              <button type="button" class="btn" id="saveQRBtn" onclick="saveQRImg()" disabled>Save QR</button>
+            </div>
+          </div>
+          <div>
+            <div id="secKeyQR"></div>
+          </div>
+        </div>
+        <div id="recoveryWarning" class="sub-label hidden" style="color:#79ff9d91; font-size:0.93em; padding-top:5px;">
+          Please store this key safely or within thermostat case.<br>
+          If lost, Password &amp; Pin recovery is impossible, will require factory reset.
+        </div>
+      </div>
+      <!-- Save / Reset -->
+      <div class="savebar">
+        <button type="button" class="btn reset" onclick="resetSetup()">Reset</button>
+        <button type="submit" class="btn save">Save</button>
+      </div>
+      <div id="setupResult" class="success"></div>
+    </form>
+  </div>
+  <script>
+    function getProtection() {
+      return document.querySelector('input[name="changeProt"]:checked').value;
+    }
+    function getWebPW() {
+      return document.querySelector('input[name="webPw"]:checked').value;
+    }
+
+    // Security Key Generator and QR Logic
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*()-_=+[]{}:?';
+    let qrObj = null;
+
+    function updateQR(text) {
+      const qrDiv = document.getElementById('secKeyQR');
+      if (!qrObj) {
+        qrObj = new QRCodeStyling({
+          width: 120,
+          height: 120,
+          type: "svg",
+          data: text,
+          dotsOptions: { color: "#2684ff", type: "rounded" },
+          backgroundOptions: { color: "#181b1e" },
+          cornersSquareOptions: { color: "#fff", type: "extra-rounded" },
+          cornersDotOptions: { color: "#2684ff", type: "dot" }
+        });
+      }
+      qrObj.update({ data: text || " " });
+      qrDiv.innerHTML = "";
+      qrObj.append(qrDiv);
+    }
+
+    function onRecoveryKeyChange() {
+      const text = document.getElementById('secKey').value.trim();
+      updateQR(text);
+    }
+
+    function generateSecKey(length = 16) {
+      let key = '';
+      for (let i = 0; i < length; i++) key += chars.charAt(Math.floor(Math.random() * chars.length));
+      const secKeyEl = document.getElementById('secKey');
+      secKeyEl.value = key;
+      onRecoveryKeyChange();
+      document.getElementById('recoveryWarning').classList.remove('hidden'); // SHOW warning
+    }
+
+    function copySecKey() {
+      const input = document.getElementById('secKey');
+      if (!input.value) return;
+      if (navigator.clipboard) navigator.clipboard.writeText(input.value);
+      else { input.select(); document.execCommand('copy'); }
+    }
+
+    function saveQRImg() {
+      if (qrObj) qrObj.download({ name: "RecoveryKeyQR", extension: "png" });
+    }
+
+    document.getElementById('secKey').addEventListener('input', onRecoveryKeyChange);
+
+    // Enable/disable fields & show standby QR if nothing is needed
+    function updateFields() {
+      const protection = getProtection();
+      const webPW = getWebPW();
+      const needsPassword = (webPW === "yes") || (protection === "password");
+      const needsPin = protection === "pin";
+      const needsRecovery = needsPassword || needsPin;
+
+      document.getElementById('setupPassword').disabled = !needsPassword;
+      document.getElementById('setupPassword2').disabled = !needsPassword;
+      document.getElementById('setupPin').disabled = !needsPin;
+
+      document.getElementById('secKey').disabled = !needsRecovery;
+      document.getElementById('autoGenBtn').disabled = !needsRecovery;
+      document.getElementById('copyCodeBtn').disabled = !needsRecovery;
+      document.getElementById('saveQRBtn').disabled = !needsRecovery;
+
+      if (!needsRecovery) {
+        document.getElementById('secKey').value = '';
+        updateQR("", true);
+        document.getElementById('recoveryWarning').classList.add('hidden'); // HIDE warning when not needed
+      } else {
+        onRecoveryKeyChange();
+      }
+    }
+
+    document.querySelectorAll('input[name="webPw"],input[name="changeProt"]').forEach(el => {
+      el.addEventListener('change', updateFields);
+    });
+    window.onload = updateFields;
+
+    function saveSetup() {
+      document.getElementById('setupResult').innerText = "✅ Settings saved! (implement your handler here)";
+      setTimeout(() => { document.getElementById('setupResult').innerText = ""; }, 3000);
+    }
+    function resetSetup() {
+      document.getElementById('thermoSetupForm').reset();
+      document.getElementById('setupPassword').value = '';
+      document.getElementById('setupPassword2').value = '';
+      document.getElementById('setupPin').value = '';
+      document.getElementById('secKey').value = '';
+      document.getElementById('setupResult').innerText = "";
+      document.getElementById('recoveryWarning').classList.add('hidden'); // HIDE warning on reset
+      updateFields();
+    }
+  </script>
+</div>
+<script>
+  document.getElementById('saveBtn').onclick = function() {
+    document.getElementById('page1').style.display = 'none';
+    document.getElementById('page2').style.display = 'block';
+  };
+</script>
+</body>
+</html>
